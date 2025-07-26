@@ -3,6 +3,7 @@ import pandas as pd
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import date
+<<<<<<< HEAD
 import os  # <<< hozzáadva!
 
 # Környezeti változók beolvasása
@@ -21,6 +22,16 @@ def get_connection():
     print("DB_HOST:", DB_HOST)
     print("DB_PORT:", DB_PORT)
 
+=======
+
+DB_NAME = "bianka"
+DB_USER = "postgres"
+DB_PASSWORD = "Knoting13"
+DB_HOST = "localhost"
+DB_PORT = "5432"
+
+def get_connection():
+>>>>>>> cbb3ca6ba7eb0ba1f9458409c187971dc0a6bddf
     return psycopg2.connect(
         dbname=DB_NAME,
         user=DB_USER,
@@ -29,7 +40,10 @@ def get_connection():
         port=DB_PORT
     )
 
+<<<<<<< HEAD
 # Adat beszúrása
+=======
+>>>>>>> cbb3ca6ba7eb0ba1f9458409c187971dc0a6bddf
 def insert_data(datum, idopont, etel, szenhidrat, vercukor_elotte, vercukor_utana):
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -39,7 +53,10 @@ def insert_data(datum, idopont, etel, szenhidrat, vercukor_elotte, vercukor_utan
             """, (datum, idopont, etel, szenhidrat, vercukor_elotte, vercukor_utana))
             conn.commit()
 
+<<<<<<< HEAD
 # Adatok lekérdezése
+=======
+>>>>>>> cbb3ca6ba7eb0ba1f9458409c187971dc0a6bddf
 def load_data():
     with get_connection() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -47,7 +64,10 @@ def load_data():
             rows = cur.fetchall()
             return pd.DataFrame(rows)
 
+<<<<<<< HEAD
 # Streamlit UI
+=======
+>>>>>>> cbb3ca6ba7eb0ba1f9458409c187971dc0a6bddf
 def main():
     st.set_page_config(page_title="Bianka napló", layout="centered")
 
@@ -61,7 +81,11 @@ def main():
 
             with col1:
                 datum = st.date_input("📅 Dátum", value=date.today())
+<<<<<<< HEAD
                 idopont = st.selectbox("⏰ Időpont", ["Reggeli", "Tízórai", "Ebéd", "Uzsonna", "Vacsora", "Utóvacsora"])
+=======
+                idopont = st.selectbox("⏰ Időpont", ["Reggeli", "Tízórai", "Ebéd", "Uzsonna", "Vacsora", "Nasi"])
+>>>>>>> cbb3ca6ba7eb0ba1f9458409c187971dc0a6bddf
                 etel = st.text_input("🍽️ Étel")
 
             with col2:
