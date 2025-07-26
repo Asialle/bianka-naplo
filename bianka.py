@@ -3,14 +3,24 @@ import pandas as pd
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import date
+import os  # <<< hozzáadva!
 
-DB_NAME = "bianka"
-DB_USER = "postgres"
-DB_PASSWORD = "Knoting13"
-DB_HOST = "localhost"
-DB_PORT = "5432"
+# Környezeti változók beolvasása
+DB_NAME = os.getenv("PGDATABASE")
+DB_USER = os.getenv("PGUSER")
+DB_PASSWORD = os.getenv("PGPASSWORD")
+DB_HOST = os.getenv("PGHOST")
+DB_PORT = os.getenv("PGPORT")
 
+# Adatbáziskapcsolat létrehozása debug kiírással
 def get_connection():
+    print("Connecting with:")
+    print("DB_NAME:", DB_NAME)
+    print("DB_USER:", DB_USER)
+    print("DB_PASSWORD:", "***" if DB_PASSWORD else None)
+    print("DB_HOST:", DB_HOST)
+    print("DB_PORT:", DB_PORT)
+
     return psycopg2.connect(
         dbname=DB_NAME,
         user=DB_USER,
@@ -19,6 +29,7 @@ def get_connection():
         port=DB_PORT
     )
 
+# Adat beszúrása
 def insert_data(datum, idopont, etel, szenhidrat, vercukor_elotte, vercukor_utana):
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -28,6 +39,7 @@ def insert_data(datum, idopont, etel, szenhidrat, vercukor_elotte, vercukor_utan
             """, (datum, idopont, etel, szenhidrat, vercukor_elotte, vercukor_utana))
             conn.commit()
 
+# Adatok lekérdezése
 def load_data():
     with get_connection() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -35,6 +47,7 @@ def load_data():
             rows = cur.fetchall()
             return pd.DataFrame(rows)
 
+# Streamlit UI
 def main():
     st.set_page_config(page_title="Bianka napló", layout="centered")
 
@@ -48,7 +61,7 @@ def main():
 
             with col1:
                 datum = st.date_input("📅 Dátum", value=date.today())
-                idopont = st.selectbox("⏰ Időpont", ["Reggeli", "Tízórai", "Ebéd", "Uzsonna", "Vacsora", "Nasi"])
+                idopont = st.selectbox("⏰ Időpont", ["Reggeli", "Tízórai", "Ebéd", "Uzsonna", "Vacsora", "Utóvacsora"])
                 etel = st.text_input("🍽️ Étel")
 
             with col2:
